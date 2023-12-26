@@ -1,6 +1,7 @@
 import pygame
 from random import choice
 import os
+import math
 
 
 # window constants
@@ -28,21 +29,29 @@ class Dots:
         self.winner = False
 
     
+    def move_right(self):
+        print("moving right", self.x, self.y)
+        self.x += self.speed
     
+    def move_left(self):
+        print("moving left", self.x, self.y)
+        self.x -= self.speed
+
+    def move_up(self):
+        print("moving up", self.x, self.y)
+        self.y -= self.speed
+
+    def move_down(self):
+        print("moving down", self.x, self.y)
+        self.y += self.speed
+
+
     def move(self, key: pygame.key.ScancodeWrapper) -> None:
 
-        if key[pygame.K_RIGHT]:
-            print("moving right", self.x, self.y)
-            self.x += self.speed
-        if key[pygame.K_LEFT]:
-            print("moving left", self.x, self.y)
-            self.x -= self.speed
-        if key[pygame.K_UP]:
-            print("moving up", self.x, self.y)
-            self.y -= self.speed
-        if key[pygame.K_DOWN]:
-            print("moving down", self.x, self.y)
-            self.y += self.speed
+        if key[pygame.K_RIGHT]: self.move_right()
+        if key[pygame.K_LEFT]: self.move_left()
+        if key[pygame.K_UP]: self.move_up()
+        if key[pygame.K_DOWN]: self.move_down()
         
     def draw(self, window: pygame.Surface) -> None:
         window.blit(self.img, (self.x, self.y))
@@ -53,6 +62,25 @@ class Dots:
     
     def kill(self) -> None:
         self.alive = False
+    
+    def distance_to(self, obj) -> int:
+        x1 = self.x
+        if obj.x <= x1 <= obj.x + obj.img_width:
+            x2 = x1
+        elif x1 < obj.x:
+            x2 = obj.x
+        else: x2 = obj.x + obj.img_width
+
+        y1 = self.y
+        if obj.y <= y1 <= obj.y + obj.img_height:
+            y2 = y1
+        elif y1 < obj.y:
+            y2 = obj.y
+        else: y2 = obj.y + obj.img_height
+        
+        return math.hypot(x2-x1, y2-y1)
+
+
 
 
 class Bars:
@@ -96,8 +124,8 @@ class Goal:
         self.y = 50
 
         self.img = GOAL_IMG
-        # self.img_width = self.img.get_width()
-        # self.img_height = self.img.get_height()
+        self.img_width = self.img.get_width()
+        self.img_height = self.img.get_height()
 
     def draw(self, window: pygame.Surface) -> None:
         window.blit(self.img, (self.x, self.y))
@@ -168,6 +196,9 @@ def main():
                 if dot.alive:
                     key = pygame.key.get_pressed()
                     dot.move(key)
+                    print("bar:", dot.distance_to(bar))
+                    print("goal:", dot.distance_to(goal))
+
                     
                     if bar.collides(dot):
                         dot.kill()
