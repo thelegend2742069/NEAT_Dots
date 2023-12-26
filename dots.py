@@ -1,13 +1,18 @@
 import pygame
-from random import randint
+from random import choice
 import os
 
+
+# window constants
 WIN_WIDTH = 800
 WIN_HEIGHT = 600
 
-DOT_IMG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "dot.png")), (15, 15))
+
+# images
+DOT_IMG = pygame.transform.scale(pygame.image.load(os.path.join("assets", "dot.png")), (10, 10))
 BAR_IMG = pygame.image.load(os.path.join("assets", "bar.png"))
 BG_IMG = pygame.image.load(os.path.join("assets", "background.png"))
+
 
 class Dots:
     def __init__(self) -> None:
@@ -68,12 +73,18 @@ class Bars:
     def collides(self, dot: Dots) -> bool:
         dot_body = dot.get_mask()
         bar_body = self.get_mask()
-        overlap = (self.x - dot.x, self.y - dot.y)
+        offset = (self.x - dot.x, self.y - dot.y)
 
-        if dot_body.overlap(bar_body, overlap):
+        if dot_body.overlap(bar_body, offset):
             print("collides")
             return True
         
+        if (dot.x == 0 or dot.x + dot.img_width == WIN_WIDTH
+            or dot.y == 0 or dot.y + dot.img_height == WIN_HEIGHT):
+            print("out of bounds")
+            return True
+
+
         return False
 
 
@@ -84,16 +95,24 @@ def draw_window(window: pygame.Surface, dots: list[Dots], bars: list[Bars]) -> N
         
     for dot in dots:
         dot.draw(window)
-    pygame.display.update()
+    pygame.display.flip()
 
 
+
+
+# bar presets
+set1 = [Bars(200, 350), Bars(-200, 150)]
+set2 = [Bars(200, 150), Bars(-200, 350)]
 
 def main():
     dots = [Dots() for _ in range(1)]
-    bars = [Bars(randint(-750, 750), randint(150, 400)) for _ in range(2)]
+    bars = choice([set1, set2])
+    
     window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     clock = pygame.time.Clock()
     game_active = True
+
+    print(dots[0].img_width, dots[0].img_height)
 
     while game_active:
         clock.tick(60)
