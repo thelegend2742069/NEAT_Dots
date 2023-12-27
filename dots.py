@@ -25,6 +25,7 @@ class Dots:
         self.x = WIN_WIDTH//2 - self.img_width
         self.y = WIN_HEIGHT - self.img_height - 10
         self.speed = 2
+        self.steps = 0
         self.alive = True
         self.winner = False
 
@@ -47,6 +48,7 @@ class Dots:
 
 
     def move(self, key: pygame.key.ScancodeWrapper) -> None:
+        self.steps += 1
 
         if key[pygame.K_RIGHT]: self.move_right()
         if key[pygame.K_LEFT]: self.move_left()
