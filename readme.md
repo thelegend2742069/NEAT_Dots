@@ -22,8 +22,16 @@
     - maybe set an initial rate which decreases as the generations go on
     - rate of decrement could be fraction of generations over max generations
 
-- Population Function
-    - creates a population of n dots initialising their nodes and weights with random values
+- Population Class
+    - input is total population
+    - those many dots and neural networks are initialised
+    - Update Function
+        - input = (distG, distB1, distB2)
+        - input is passed to neural network of each dot
+        - output = (moveup, moveleft, moveright)
+        - dot moves any direction which has output > 1
+        - no return value
+
 
 - New Generation Function
     - saves 5 best dots from previous generation and uses them to create new population of 45 new dots while applying mutations
