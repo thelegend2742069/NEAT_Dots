@@ -2,6 +2,7 @@ import pygame
 from random import choice
 import os
 import math
+# from population import Population
 
 
 # window constants
@@ -24,26 +25,26 @@ class Dots:
 
         self.x = WIN_WIDTH//2 - self.img_width
         self.y = WIN_HEIGHT - self.img_height - 10
-        self.speed = 2
+        self.speed = 5
         self.steps = 0
         self.alive = True
         self.winner = False
 
     
     def move_right(self):
-        print("moving right", self.x, self.y)
+        # print("moving right", self.x, self.y)
         self.x += self.speed
     
     def move_left(self):
-        print("moving left", self.x, self.y)
+        # print("moving left", self.x, self.y)
         self.x -= self.speed
 
     def move_up(self):
-        print("moving up", self.x, self.y)
+        # print("moving up", self.x, self.y)
         self.y -= self.speed
 
     def move_down(self):
-        print("moving down", self.x, self.y)
+        # print("moving down", self.x, self.y)
         self.y += self.speed
 
 
@@ -80,7 +81,7 @@ class Dots:
             y2 = obj.y
         else: y2 = obj.y + obj.img_height
         
-        return math.hypot(x2-x1, y2-y1)
+        return math.hypot(x2-x1, y2-y1)/1000
 
 
 
@@ -150,71 +151,94 @@ class Goal:
         return False
 
 
-def draw_window(window: pygame.Surface, dots: list[Dots], inactive: list[Dots], bars: list[Bars], goal: Goal) -> None:
-    window.blit(BG_IMG, (0, 0))
-    goal.draw(window)
+# def draw_window(window: pygame.Surface, p:Population, bars: list[Bars], goal: Goal) -> None:
+#     window.blit(BG_IMG, (0, 0))
+#     goal.draw(window)
 
-    for bar in bars:
-        bar.draw(window)
+#     for bar in bars:
+#         bar.draw(window)
+#     p.draw(window)
+
+#     pygame.display.flip()
+
+# # def draw_window(window: pygame.Surface, dots: list[Dots], inactive: list[Dots], bars: list[Bars], goal: Goal) -> None:
+# #     window.blit(BG_IMG, (0, 0))
+# #     goal.draw(window)
+
+# #     for bar in bars:
+# #         bar.draw(window)
         
-    for dot in dots:
-        dot.draw(window)
+# #     for dot in dots:
+# #         dot.draw(window)
 
-    for dot in inactive:
-        dot.draw(window)
-    pygame.display.flip()
-
-
+# #     for dot in inactive:
+# #         dot.draw(window)
+# #     pygame.display.flip()
 
 
-# bar presets
-set1 = [Bars(200, 350), Bars(-200, 150)]
-set2 = [Bars(200, 150), Bars(-200, 350)]
 
-def main():
-    dots = [Dots() for _ in range(1)]
-    inactive = []
-    bars = choice([set1, set2])
-    goal = Goal()
 
-    window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-    clock = pygame.time.Clock()
-    game_active = True
+# # bar presets
+# set1 = [Bars(200, 350), Bars(-200, 150)]
+# set2 = [Bars(200, 150), Bars(-200, 350)]
 
-    print(dots[0].img_width, dots[0].img_height)
+# def main():
+#     # dots = [Dots() for _ in range(1)]
+#     # inactive = []
+#     p = Population(50, [3, 2, 3])
+#     bars = choice([set1, set2])
+#     goal = Goal()
 
-    while game_active:
-        clock.tick(60)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game_active = False
-                pygame.quit()
-                break
+#     window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+#     clock = pygame.time.Clock()
+#     game_active = True
+
+
+#     while game_active:
+#         clock.tick(60)
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 game_active = False
+#                 pygame.quit()
+#                 break
         
-        dead = []
+#         p.update(goal, bars)
+#         draw_window(window, p, bars, goal)
 
-        for bar in bars:
-            for dot in dots:
-                if dot.alive:
-                    key = pygame.key.get_pressed()
-                    dot.move(key)
-                    print("bar:", dot.distance_to(bar))
-                    print("goal:", dot.distance_to(goal))
+#     # print(dots[0].img_width, dots[0].img_height)
+
+#     # while game_active:
+#     #     clock.tick(60)
+#     #     for event in pygame.event.get():
+#     #         if event.type == pygame.QUIT:
+#     #             game_active = False
+#     #             pygame.quit()
+#     #             break
+        
+#     #     dead = []
+
+#     #     for bar in bars:
+#     #         for dot in dots:
+#     #             if dot.alive:
+#     #                 key = pygame.key.get_pressed()
+#     #                 dot.move(key)
+#     #                 print("bar:", dot.distance_to(bar))
+#     #                 print("goal:", dot.distance_to(goal))
 
                     
-                    if bar.collides(dot):
-                        dot.kill()
-                        dead.append(dot)
+#     #                 if bar.collides(dot):
+#     #                     dot.kill()
+#     #                     dead.append(dot)
 
-        for dot in dots:             
-            if goal.collides(dot):
-                dead.append(dot)
+#     #     for dot in dots:             
+#     #         if goal.collides(dot):
+#     #             dead.append(dot)
         
-        for dot in dead:
-            dots.remove(dot)
-            inactive.append(dot)
+#     #     for dot in dead:
+#     #         dots.remove(dot)
+#     #         inactive.append(dot)
 
-        draw_window(window, dots, inactive, bars, goal)
+#     #     draw_window(window, dots, inactive, bars, goal)
 
 
-main()
+# main()
