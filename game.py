@@ -1,6 +1,6 @@
 import pygame
 from random import choice
-import os
+import os, sys
 from dots import Bars, Goal
 from population import Population
 
@@ -48,25 +48,30 @@ set2 = [Bars(200, 150), Bars(-200, 350)]
 def main():
     # dots = [Dots() for _ in range(1)]
     # inactive = []
-    p = Population(100, [3, 2, 3])
+    p = Population(100, [6, 4, 3])
     bars = choice([set1, set2])
     goal = Goal()
 
     window = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     clock = pygame.time.Clock()
     game_active = True
-
+    flag = True
 
     while game_active:
         clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_active = False
+                p.get_fitness()
                 pygame.quit()
+                sys.exit()
                 break
         
         p.update(goal, bars)
         draw_window(window, p, bars, goal)
+        if p.fittest>0: print(f'-------------{p.fittest}-------------')
+    
+
 
     # print(dots[0].img_width, dots[0].img_height)
 

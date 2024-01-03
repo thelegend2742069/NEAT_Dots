@@ -16,13 +16,13 @@ class Layer:
         # print("creating weights")
         if weights == []:
             self.weights = [[random.uniform(-5, 5) for _ in range(out_nodes)] for _ in range(in_nodes)]
-        else: self.weights = weights
+        else: self.weights = weights    
         
         if biases == []:
             self.biases = [random.uniform(-0.3, 0.3) for _ in range(out_nodes)]
         else: self.biases = biases
 
-        print(f'{self.weights=}, {self.biases=}')
+        # print(f'{self.weights=}, {self.biases=}')
 
     
     def calculate_output(self, inputs:list) -> list:
@@ -34,7 +34,7 @@ class Layer:
                 output[j] += inputs[i] * self.weights[i][j]
         
         output = [activation(output[j]) + self.biases[j] for j in range(self.out_nodes)]
-        print(output)
+        # print(output)
         return output
 
 

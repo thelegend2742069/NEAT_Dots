@@ -24,9 +24,10 @@ class Dots:
         self.img_height = self.img.get_height()
 
         self.x = WIN_WIDTH//2 - self.img_width
-        self.y = WIN_HEIGHT - self.img_height - 10
+        self.y = WIN_HEIGHT - self.img_height - 30
         self.speed = 5
-        self.steps = 0
+        self.steps = 1
+        self.fittness = 0
         self.alive = True
         self.winner = False
 
@@ -34,18 +35,22 @@ class Dots:
     def move_right(self):
         # print("moving right", self.x, self.y)
         self.x += self.speed
+        self.steps += 1
     
     def move_left(self):
         # print("moving left", self.x, self.y)
         self.x -= self.speed
+        self.steps += 1
 
     def move_up(self):
         # print("moving up", self.x, self.y)
         self.y -= self.speed
+        self.steps += 1
 
     def move_down(self):
         # print("moving down", self.x, self.y)
         self.y += self.speed
+        self.steps += 1
 
 
     def move(self, key: pygame.key.ScancodeWrapper) -> None:
@@ -64,6 +69,7 @@ class Dots:
         return pygame.mask.from_surface(self.img)
     
     def kill(self) -> None:
+        self.fittness -= 200
         self.alive = False
     
     def distance_to(self, obj) -> int:
@@ -81,7 +87,16 @@ class Dots:
             y2 = obj.y
         else: y2 = obj.y + obj.img_height
         
-        return math.hypot(x2-x1, y2-y1)/1000
+        return [(x2-x1)/800, (y2-y1)/600]
+
+
+    def get_fitness(self, goal):
+        x_dist, y_dist = self.distance_to(goal)
+
+        self.fittness = (1 - x_dist)*1000 + (1 - y_dist)*1000
+        self.fittness = 5000 - (self.fittness/self.steps)**2
+
+        return self.fittness
 
 
 
